@@ -1,10 +1,9 @@
 #!/usr/bin/python
 
 import numpy as np
-import matplotlib.pyplot as plt
 import pylab as pl
 
-def prettyPicture(clf, X_test, y_test):
+def prettyPicture(clf, X_test, y_test, axes):
     x_min = 0.0; x_max = 1.0
     y_min = 0.0; y_max = 1.0
     
@@ -16,10 +15,10 @@ def prettyPicture(clf, X_test, y_test):
 
     # Put the result into a color plot
     Z = Z.reshape(xx.shape)
-    plt.xlim(xx.min(), xx.max())
-    plt.ylim(yy.min(), yy.max())
+    axes.set_xlim(xx.min(), xx.max())
+    axes.set_ylim(yy.min(), yy.max())
 
-    plt.pcolormesh(xx, yy, Z, cmap=pl.cm.seismic)
+    axes.pcolormesh(xx, yy, Z, cmap=pl.cm.seismic)
 
     # Plot also the test points
     grade_sig = [X_test[ii][0] for ii in range(0, len(X_test)) if y_test[ii]==0]
@@ -27,13 +26,12 @@ def prettyPicture(clf, X_test, y_test):
     grade_bkg = [X_test[ii][0] for ii in range(0, len(X_test)) if y_test[ii]==1]
     bumpy_bkg = [X_test[ii][1] for ii in range(0, len(X_test)) if y_test[ii]==1]
 
-    plt.scatter(grade_sig, bumpy_sig, color = "b", label="fast")
-    plt.scatter(grade_bkg, bumpy_bkg, color = "r", label="slow")
-    plt.legend()
-    plt.xlabel("bumpiness")
-    plt.ylabel("grade")
+    axes.scatter(grade_sig, bumpy_sig, color = "b", label="fast")
+    axes.scatter(grade_bkg, bumpy_bkg, color = "r", label="slow")
+    axes.legend(loc='upper right')
+    axes.set_xlabel("bumpiness")
+    axes.set_ylabel("grade")
 
-    plt.savefig("test.png")
 
 import base64
 import json
@@ -46,5 +44,5 @@ def output_image(name, format, bytes):
     data['name'] = name
     data['format'] = format
     data['bytes'] = base64.encodestring(bytes)
-    print image_start+json.dumps(data)+image_end
+    print(image_start+json.dumps(data)+image_end)
                                     
