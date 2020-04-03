@@ -21,8 +21,8 @@ dictionary = pickle.load( open("../final_project/final_project_dataset_modified.
 
 ### list the features you want to look at--first item in the 
 ### list will be the "target" feature
-# features_list = ["bonus", "salary"]
-features_list = ["bonus", "long_term_incentive"]
+features_list = ["bonus", "salary"]
+# features_list = ["bonus", "long_term_incentive"]
 print(f'Performing regression of {features_list[0]} against {features_list[1]}')
 
 data = featureFormat(dictionary, features_list, remove_any_zeroes=True,
@@ -41,7 +41,6 @@ test_color = "r"
 ### plots it correctly. Don't forget to change the test_color above from "b" to
 ### "r" to differentiate training points from test points.
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
 
 print('\n--- Fitting model on training set ---')
 reg = LinearRegression()
@@ -50,15 +49,14 @@ print('What are the slope and intercept?\n' \
       f'\tslope: {reg.coef_}\n' \
       f'\tintercept: {reg.intercept_}')
 
-target_predicted = reg.predict(feature_test)
-print(f'r2 score: {r2_score(target_test, target_predicted)}')
+print(f'r2 score: {reg.score(feature_test, target_test)}')
 
 ### draw the scatterplot, with color-coded training and testing points
 import matplotlib.pyplot as plt
 for feature, target in zip(feature_test, target_test):
     plt.scatter( feature, target, color=test_color ) 
 for feature, target in zip(feature_train, target_train):
-    plt.scatter( feature, target, color=train_color ) 
+    plt.scatter( feature, target, color=train_color )
 
 ### labels for the legend
 plt.scatter(feature_test[0], target_test[0], color=test_color, label="test")
@@ -79,8 +77,7 @@ print('What are the slope and intercept?\n' \
       f'\tslope: {reg.coef_}\n' \
       f'\tintercept: {reg.intercept_}')
 
-target_predicted = reg.predict(feature_test)
-print(f'r2 score: {r2_score(target_test, target_predicted)}')
+print(f'r2 score: {reg.score(feature_test, target_test)}')
 
 plt.xlabel(features_list[1])
 plt.ylabel(features_list[0])
