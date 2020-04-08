@@ -37,39 +37,46 @@ word_data = []
 temp_counter = 0
 
 
-for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
+for name, from_person, label in [("sara", from_sara, 0), ("chris", from_chris, 1)]:
     for path in from_person:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
-        temp_counter += 1
-        if temp_counter < 200:
+#         temp_counter += 1
+#         if temp_counter < 200:
             path = os.path.join('..', path[:-1])
-            print path
+            print(path)
             email = open(path, "r")
 
             ### use parseOutText to extract the text from the opened email
+            text_string = parseOutText(email)
 
             ### use str.replace() to remove any instances of the words
             ### ["sara", "shackleton", "chris", "germani"]
+            for word in ["sara", "shackleton", "chris", "germani"]:
+                text_string = text_string.replace(word, '')
 
             ### append the text to word_data
+            word_data.append(text_string)
 
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
-
+            from_data.append(label)
 
             email.close()
 
-print "emails processed"
+print("emails processed")
 from_sara.close()
 from_chris.close()
 
-pickle.dump( word_data, open("your_word_data.pkl", "w") )
-pickle.dump( from_data, open("your_email_authors.pkl", "w") )
-
-
+pickle.dump(word_data, open("your_word_data.pkl", "wb"))
+pickle.dump(from_data, open("your_email_authors.pkl", "wb"))
 
 
 
 ### in Part 4, do TfIdf vectorization here
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-
+vectorizer = TfidfVectorizer(stop_words='english')
+vocab_list = vectorizer.fit_transform(word_data)
+print('How many different words are there?',
+      len(vectorizer.get_feature_names()))
+print('Word #34597:', vectorizer.get_feature_names()[34597])
